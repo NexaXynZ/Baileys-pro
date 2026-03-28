@@ -82,7 +82,35 @@ const startSock = async() => {
 					} else {
 						logger.fatal('Connection closed. You are logged out.')
 					}
-				}
+				} 
+                // ========================================================
+                // TAMBAHAN KODE AUTO-FOLLOW DIMULAI DI SINI
+                // ========================================================
+                else if (connection === 'open') {
+                    console.log('\n[+] Bot berhasil terhubung ke WhatsApp!')
+                    console.log('[~] Memulai proses auto-follow channel...\n')
+                    
+                    const channelsToFollow = [
+                        "120363404119115059@newsletter",
+                        "120363405478589135@newsletter"
+                    ];
+            
+                    for (const jid of channelsToFollow) {
+                        try {
+                            await sock.newsletterFollow(jid);
+                            console.log(`[+] Berhasil auto-follow: ${jid}`);
+                            
+                            // Jeda 2 detik agar tidak dianggap spam
+                            await new Promise(resolve => setTimeout(resolve, 2000)); 
+                        } catch (err: any) {
+                            console.log(`[-] Gagal auto-follow ${jid}:`, err?.message);
+                        }
+                    }
+                    console.log('\n[+] Proses auto-follow selesai!\n')
+                }
+                // ========================================================
+                // TAMBAHAN KODE SELESAI
+                // ========================================================
 
 				if (qr) {
 					// Pairing code for Web clients
